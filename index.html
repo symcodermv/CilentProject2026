@@ -1,0 +1,4365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FAAFU Police Club 2026</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #0a1a2d;
+            color: #e0f0ff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            font-size: 14px;
+        }
+
+        /* Splash screen container */
+        .splash-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a1a2d 0%, #0c2b4d 100%);
+            z-index: 1000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        /* Strava-like line animation - Blue Theme */
+        .line-animation {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .line {
+            position: absolute;
+            background: linear-gradient(90deg, #1e90ff, #00bfff);
+            border-radius: 2px;
+            opacity: 0;
+            box-shadow: 0 0 15px rgba(30, 144, 255, 0.5);
+        }
+
+        .line-1 {
+            width: 100%;
+            height: 3px;
+            top: 0;
+            left: 0;
+            animation: drawLine 1.2s forwards 0.3s;
+        }
+
+        .line-2 {
+            width: 3px;
+            height: 100%;
+            top: 0;
+            right: 0;
+            animation: drawLine 1.2s forwards 0.6s;
+        }
+
+        .line-3 {
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            right: 0;
+            animation: drawLine 1.2s forwards 0.9s;
+        }
+
+        .line-4 {
+            width: 3px;
+            height: 100%;
+            bottom: 0;
+            left: 0;
+            animation: drawLine 1.2s forwards 1.2s;
+        }
+
+        /* Logo reveal animation */
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            opacity: 0;
+            animation: fadeInLogo 0.8s forwards 1.8s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Loading indicator */
+        .loading {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #8bb9ff;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards 2.2s;
+        }
+
+        .dots {
+            display: inline-block;
+            width: 15px;
+        }
+
+        .dot {
+            opacity: 0;
+            animation: dotAnimation 1.5s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .main-content.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Login Section */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .login-box {
+            background: rgba(16, 33, 54, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .login-box h2 {
+            text-align: center;
+            color: #1e90ff;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #a8d0ff;
+            font-size: 0.85rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            background: rgba(10, 26, 45, 0.8);
+            color: #e0f0ff;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1e90ff;
+            box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: #6b8db3;
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e90ff 0%, #0077cc 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0077cc 0%, #005fa3 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(30, 144, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(74, 111, 165, 0.8);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(74, 111, 165, 1);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .login-options {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .login-options a {
+            text-decoration: none;
+            transition: all 0.3s ease;
+            color: #1e90ff;
+            font-weight: 600;
+        }
+
+        .login-options a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            display: block;
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            display: block;
+        }
+
+        .message.info {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            display: block;
+        }
+
+        .login-footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #6b8db3;
+            font-size: 0.85rem;
+        }
+
+        .developer-name {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 15, 30, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: rgba(16, 33, 54, 0.98);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            animation: modalFadeIn 0.4s ease;
+            margin: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .modal-title {
+            color: #1e90ff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #6b8db3;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Admin Dashboard Styles */
+        .admin-dashboard {
+            display: none;
+            min-height: 100vh;
+            background: #0a1a2d;
+        }
+
+        /* Officer Dashboard Styles */
+        .officer-dashboard {
+            display: none;
+            min-height: 100vh;
+            background: #0a1a2d;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: rgba(16, 33, 54, 0.95);
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+            z-index: 1001;
+            border-right: 1px solid rgba(30, 144, 255, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            color: #1e90ff;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .close-sidebar {
+            background: none;
+            border: none;
+            color: #6b8db3;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            padding: 15px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #a8d0ff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(30, 144, 255, 0.1);
+            color: #1e90ff;
+            border-left-color: #1e90ff;
+        }
+
+        .menu-item.active {
+            background: rgba(30, 144, 255, 0.15);
+            color: #1e90ff;
+            border-left-color: #1e90ff;
+        }
+
+        .menu-item i {
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .main-panel {
+            padding: 15px;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #1e90ff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(30, 144, 255, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #8bb9ff;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .section-title {
+            color: #1e90ff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card {
+            background: rgba(16, 33, 54, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.1);
+        }
+
+        .card-title {
+            color: #8bb9ff;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .card-content {
+            color: #e0f0ff;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            background: rgba(30, 144, 255, 0.1);
+            color: #1e90ff;
+            font-weight: 600;
+            text-align: left;
+            padding: 10px;
+            border-bottom: 2px solid rgba(30, 144, 255, 0.3);
+        }
+
+        .data-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(30, 144, 255, 0.1);
+            color: #e0f0ff;
+        }
+
+        .data-table tr:hover {
+            background: rgba(30, 144, 255, 0.05);
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+        }
+
+        .status-approved {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Document Preview Styles */
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .document-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #1e90ff;
+        }
+
+        .document-info h4 {
+            color: #1e90ff;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .document-info p {
+            color: #8bb9ff;
+            font-size: 0.8rem;
+        }
+
+        .preview-btn {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .preview-btn:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        /* PDF Preview Modal - View Only */
+        .pdf-preview-modal {
+            display: none;
+        }
+
+        .pdf-preview-container {
+            width: 100%;
+            height: 80vh;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: auto;
+        }
+
+        .pdf-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 100;
+        }
+
+        .pdf-control-btn {
+            background: rgba(30, 144, 255, 0.8);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .pdf-control-btn:hover {
+            background: rgba(30, 144, 255, 1);
+        }
+
+        /* Overlay for mobile */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        /* File Upload */
+        .file-upload {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed rgba(30, 144, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(10, 26, 45, 0.8);
+            color: #e0f0ff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .file-input:hover {
+            border-color: #1e90ff;
+        }
+
+        .file-name {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #6b8db3;
+            text-align: center;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1e90ff, #00bfff);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #8bb9ff;
+            text-align: center;
+        }
+
+        /* Certificate Specific Styles */
+        .certificate-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .certificate-card {
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .certificate-image {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: white;
+            padding: 10px;
+            border: 1px solid rgba(30, 144, 255, 0.3);
+            margin-bottom: 10px;
+        }
+
+        /* Certificate Preview Styles */
+        .certificate-preview {
+            position: relative;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .certificate-template {
+            padding: 30px;
+            background: linear-gradient(135deg, #1e90ff 0%, #0077cc 100%);
+            color: white;
+            text-align: center;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .certificate-template h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .certificate-template h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .certificate-template p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        /* Officer Upload Documents */
+        .upload-section {
+            margin-bottom: 20px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .upload-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .upload-card {
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .upload-card h4 {
+            color: #1e90ff;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Officer View Documents */
+        .documents-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .documents-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .documents-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .document-card {
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .document-card h4 {
+            color: #1e90ff;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .document-meta {
+            color: #8bb9ff;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* Access Control Panel */
+        .access-control {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .access-control {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .access-card {
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .access-card h4 {
+            color: #1e90ff;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .access-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .access-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: rgba(10, 26, 45, 0.5);
+            border-radius: 6px;
+        }
+
+        .access-name {
+            color: #e0f0ff;
+            font-size: 0.85rem;
+        }
+
+        .access-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+        }
+
+        .access-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .access-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .access-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .access-slider {
+            background-color: #1e90ff;
+        }
+
+        input:checked + .access-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Custom Form Builder */
+        .form-builder {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .form-field {
+            background: rgba(30, 144, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid rgba(30, 144, 255, 0.2);
+        }
+
+        .form-field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-field-title {
+            color: #1e90ff;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-field-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .field-control-btn {
+            background: none;
+            border: none;
+            color: #6b8db3;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .field-control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes drawLine {
+            0% {
+                opacity: 1;
+                transform: scaleX(0) scaleY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(1) scaleY(1);
+            }
+        }
+
+        @keyframes fadeInLogo {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes dotAnimation {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes modalFadeIn {
+            0% { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .data-table {
+                font-size: 0.8rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 8px 5px;
+            }
+            
+            .modal-content {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-box {
+                padding: 20px 15px;
+            }
+            
+            .login-box h2 {
+                font-size: 1.3rem;
+            }
+            
+            .form-input {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-container" id="splashScreen">
+        <div class="line-animation">
+            <div class="line line-1"></div>
+            <div class="line line-2"></div>
+            <div class="line line-3"></div>
+            <div class="line line-4"></div>
+            <div class="logo-container">
+                <img src="logo.jpg" alt="FAAFU Police Club Logo" class="logo-image">
+            </div>
+        </div>
+        <div class="loading">
+            Loading<span class="dots">
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+                <span class="dot">.</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Login Section -->
+        <div id="loginSection" class="login-container">
+            <div class="login-box">
+                <h2><i class="fas fa-shield-alt"></i> FAAFU Police Club</h2>
+                <div id="loginMessage" class="message"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Service Number</label>
+                        <input type="text" class="form-input" id="serviceNumber" required placeholder="Enter service number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="password" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="loginBtn">
+                        <span id="loginBtnText">Sign In</span>
+                    </button>
+                </form>
+                <div class="login-options">
+                    <a href="#" onclick="showAdminLogin()">Admin Login</a>
+                    <span style="margin: 0 10px; color: #4a6fa5;">•</span>
+                    <a href="#" onclick="showRegisterForm()">New Officer Registration</a>
+                </div>
+            </div>
+            <div class="login-footer">
+                <div class="developer-name">
+                    <i class="fas fa-code"></i> Developed by Ahmed Vaseem
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Form Modal -->
+        <div id="registerModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title"><i class="fas fa-user-plus"></i> New Officer Registration</div>
+                    <button class="close-btn" onclick="closeRegisterForm()">&times;</button>
+                </div>
+                <div id="registerMessage" class="message"></div>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="regFullName" required placeholder="Enter full name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Service Number</label>
+                            <input type="text" class="form-input" id="regServiceNumber" required placeholder="Enter service number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-input" id="regContact" required placeholder="Enter contact">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-input" id="regPassword" required placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-input" id="regConfirmPassword" required placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="button" onclick="closeRegisterForm()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Admin Login Modal -->
+        <div id="adminLoginModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title"><i class="fas fa-user-shield"></i> Admin Login</div>
+                    <button class="close-btn" onclick="closeAdminLogin()">&times;</button>
+                </div>
+                <div id="adminMessage" class="message"></div>
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label class="form-label">Admin ID</label>
+                        <input type="text" class="form-input" id="adminId" required placeholder="Enter Admin ID">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="adminPassword" required placeholder="Enter Admin Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login as Admin</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard" id="adminDashboard">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Admin Panel</div>
+                <button class="close-sidebar" onclick="toggleSidebar()">&times;</button>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item" onclick="showSection('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('pendingRegistrations')">
+                    <i class="fas fa-users"></i>
+                    <span>Pending Registrations</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('certificates')">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certificates</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('clubBudget')">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Club Budget</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('law')">
+                    <i class="fas fa-gavel"></i>
+                    <span>Law</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('meetingDocuments')">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Meeting Documents</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('officerDocuments')">
+                    <i class="fas fa-folder-open"></i>
+                    <span>Officer Documents</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('allUsers')">
+                    <i class="fas fa-user-friends"></i>
+                    <span>All Officers</span>
+                </a>
+                <!-- New Custom Features -->
+                <a href="#" class="menu-item" onclick="showSection('accessControl')">
+                    <i class="fas fa-user-lock"></i>
+                    <span>Access Control</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('customForms')">
+                    <i class="fas fa-wrench"></i>
+                    <span>Custom Forms</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('announcements')">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Announcements</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="main-panel" id="mainPanel">
+            <div class="top-bar">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <span>Admin User</span>
+                    <button class="logout-btn" onclick="logoutAdmin()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Sections -->
+            <div id="dashboardSection" class="dashboard-section active">
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Welcome, Admin</div>
+                    </div>
+                    <div class="card-content">
+                        <p>Manage all aspects of FAAFU Police Club from this dashboard.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Registrations -->
+            <div id="pendingRegistrationsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-users"></i> Pending Registrations</h2>
+                <div class="table-responsive">
+                    <table class="data-table" id="pendingTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Service No.</th>
+                                <th>Contact</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Certificates Section -->
+            <div id="certificatesSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-certificate"></i> Certificate Management</h2>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p>Manage and assign certificates to officers.</p>
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="showAddCertificateForm()">
+                                <i class="fas fa-plus"></i> Add Certificate Template
+                            </button>
+                            <button class="btn btn-secondary" onclick="manageCertificates()">
+                                <i class="fas fa-cog"></i> Manage Certificates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certificate Templates List -->
+                <div id="certificatesList" class="certificate-container">
+                    <!-- Certificates will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Club Budget -->
+            <div id="clubBudgetSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-money-bill-wave"></i> Club Budget</h2>
+                <div class="card">
+                    <div class="card-content">
+                        <p>Budget management features coming soon...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Law Section -->
+            <div id="lawSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-gavel"></i> Law</h2>
+                <div class="card">
+                    <div class="card-content">
+                        <p>Law and regulations content...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meeting Documents -->
+            <div id="meetingDocumentsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-file-pdf"></i> Meeting Documents</h2>
+                
+                <!-- Add Meeting Document Button -->
+                <div style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="showAddMeetingForm()">
+                        <i class="fas fa-plus"></i> Add Meeting Document
+                    </button>
+                </div>
+
+                <!-- Meeting Documents List -->
+                <div id="meetingDocumentsList" class="document-list">
+                    <!-- Documents will be populated here -->
+                </div>
+            </div>
+
+            <!-- Officer Documents (Admin View) -->
+            <div id="officerDocumentsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-folder-open"></i> Officer Documents</h2>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p>View and manage documents uploaded by officers.</p>
+                    </div>
+                </div>
+
+                <!-- Officer Documents Grid -->
+                <div id="officerDocumentsGrid" class="documents-grid">
+                    <!-- Officer documents will be loaded here -->
+                </div>
+            </div>
+
+            <!-- All Officers -->
+            <div id="allUsersSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-user-friends"></i> All Officers</h2>
+                <div class="table-responsive">
+                    <table class="data-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Service No.</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Access Control Section -->
+            <div id="accessControlSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-user-lock"></i> Access Control</h2>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p>Control what features officers can access. Toggle switches to enable/disable features.</p>
+                    </div>
+                </div>
+
+                <div class="access-control">
+                    <div class="access-card">
+                        <h4><i class="fas fa-upload"></i> Document Upload</h4>
+                        <div class="access-list">
+                            <div class="access-item">
+                                <span class="access-name">Allow Document Upload</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowUpload" checked onchange="updateAccessControl('allowUpload', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-name">Max File Size (MB)</span>
+                                <select class="form-input" id="maxFileSize" style="width: 100px; height: 30px; font-size: 0.8rem;" onchange="updateAccessControl('maxFileSize', this.value)">
+                                    <option value="5">5 MB</option>
+                                    <option value="10" selected>10 MB</option>
+                                    <option value="20">20 MB</option>
+                                    <option value="50">50 MB</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="access-card">
+                        <h4><i class="fas fa-eye"></i> Document Viewing</h4>
+                        <div class="access-list">
+                            <div class="access-item">
+                                <span class="access-name">Allow Meeting Document Preview</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowMeetingPreview" checked onchange="updateAccessControl('allowMeetingPreview', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-name">Allow Document Download</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowDocumentDownload" onchange="updateAccessControl('allowDocumentDownload', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="access-card">
+                        <h4><i class="fas fa-certificate"></i> Certificate Access</h4>
+                        <div class="access-list">
+                            <div class="access-item">
+                                <span class="access-name">View Certificates</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowCertificateView" checked onchange="updateAccessControl('allowCertificateView', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-name">Download Certificates</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowCertificateDownload" onchange="updateAccessControl('allowCertificateDownload', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="access-card">
+                        <h4><i class="fas fa-user"></i> Profile Management</h4>
+                        <div class="access-list">
+                            <div class="access-item">
+                                <span class="access-name">Edit Profile</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowProfileEdit" checked onchange="updateAccessControl('allowProfileEdit', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                            <div class="access-item">
+                                <span class="access-name">View Other Officers</span>
+                                <label class="access-switch">
+                                    <input type="checkbox" id="allowViewOfficers" onchange="updateAccessControl('allowViewOfficers', this.checked)">
+                                    <span class="access-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="saveAccessSettings()">
+                        <i class="fas fa-save"></i> Save All Settings
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Forms Section -->
+            <div id="customFormsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-wrench"></i> Custom Forms</h2>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p>Create custom forms for officers to fill out.</p>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn btn-primary" onclick="showAddFormField()">
+                                <i class="fas fa-plus"></i> Add Form Field
+                            </button>
+                            <button class="btn btn-secondary" onclick="saveCustomForm()">
+                                <i class="fas fa-save"></i> Save Form
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Builder -->
+                <div id="formBuilder" class="form-builder">
+                    <!-- Form fields will be added here -->
+                </div>
+
+                <!-- Form Preview -->
+                <div id="formPreview" class="card" style="margin-top: 20px; display: none;">
+                    <div class="card-header">
+                        <div class="card-title">Form Preview</div>
+                    </div>
+                    <div class="card-content">
+                        <div id="previewContent">
+                            <!-- Preview will be shown here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            <div id="announcementsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-bullhorn"></i> Announcements</h2>
+                
+                <div class="card">
+                    <div class="card-content">
+                        <p>Post announcements that will be visible to all officers.</p>
+                        <div style="margin-top: 15px;">
+                            <div class="form-group">
+                                <label class="form-label">Announcement Title</label>
+                                <input type="text" class="form-input" id="announcementTitle" placeholder="Enter title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Announcement Content</label>
+                                <textarea class="form-input" id="announcementContent" rows="4" placeholder="Enter announcement content"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Priority</label>
+                                <select class="form-input" id="announcementPriority">
+                                    <option value="normal">Normal</option>
+                                    <option value="important">Important</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="postAnnouncement()">
+                                <i class="fas fa-paper-plane"></i> Post Announcement
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Previous Announcements -->
+                <div id="announcementsList" class="document-list" style="margin-top: 20px;">
+                    <!-- Announcements will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Officer Dashboard -->
+    <div class="officer-dashboard" id="officerDashboard">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" onclick="toggleOfficerSidebar()"></div>
+        
+        <!-- Sidebar -->
+        <div class="sidebar" id="officerSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Officer Panel</div>
+                <button class="close-sidebar" onclick="toggleOfficerSidebar()">&times;</button>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item" onclick="showOfficerSection('officerDashboard')">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showOfficerSection('officerProfile')">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showOfficerSection('uploadDocuments')">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Documents</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showOfficerSection('myDocuments')">
+                    <i class="fas fa-folder"></i>
+                    <span>My Documents</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showOfficerSection('viewMeetingDocs')">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Meeting Documents</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showOfficerSection('myCertificates')">
+                    <i class="fas fa-certificate"></i>
+                    <span>My Certificates</span>
+                </a>
+                <!-- Dynamic menu items based on access control -->
+                <div id="dynamicOfficerMenu"></div>
+            </div>
+        </div>
+
+        <!-- Main Panel -->
+        <div class="main-panel" id="officerMainPanel">
+            <div class="top-bar">
+                <button class="menu-toggle" onclick="toggleOfficerSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <span id="officerName">Officer</span>
+                    <button class="logout-btn" onclick="logoutOfficer()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Officer Dashboard Sections -->
+            <div id="officerDashboardSection" class="dashboard-section active">
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Welcome, <span id="dashboardOfficerName"></span></div>
+                    </div>
+                    <div class="card-content">
+                        <p>Welcome to FAAFU Police Club Officer Portal. You can upload documents, view meeting minutes, and manage your profile from here.</p>
+                        
+                        <!-- Announcements Display -->
+                        <div id="officerAnnouncements" style="margin-top: 20px; border-top: 1px solid rgba(30, 144, 255, 0.2); padding-top: 15px;">
+                            <h4 style="color: #1e90ff; margin-bottom: 10px;"><i class="fas fa-bullhorn"></i> Latest Announcements</h4>
+                            <div id="announcementsDisplay">
+                                <!-- Announcements will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Officer Profile -->
+            <div id="officerProfileSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-user"></i> My Profile</h2>
+                <div class="card">
+                    <div class="card-content">
+                        <div id="officerProfileContent">
+                            <!-- Profile info will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Documents -->
+            <div id="uploadDocumentsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-upload"></i> Upload Documents</h2>
+                
+                <div class="upload-section">
+                    <div class="card">
+                        <div class="card-content">
+                            <p>Upload your documents here. Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB each).</p>
+                        </div>
+                    </div>
+
+                    <div class="upload-grid">
+                        <div class="upload-card">
+                            <h4><i class="fas fa-file-pdf"></i> Upload Document</h4>
+                            <div class="file-upload">
+                                <input type="file" class="file-input" id="officerDocument" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                <div class="file-name" id="officerFileName">No file chosen</div>
+                                <div class="progress-container" id="officerProgressContainer">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="officerProgressFill"></div>
+                                    </div>
+                                    <div class="progress-text" id="officerProgressText">0% uploaded</div>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 10px;">
+                                <label class="form-label">Document Title</label>
+                                <input type="text" class="form-input" id="documentTitle" placeholder="Enter document title">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Document Type</label>
+                                <select class="form-input" id="documentType">
+                                    <option value="">Select type</option>
+                                    <option value="report">Report</option>
+                                    <option value="certificate">Certificate</option>
+                                    <option value="photo">Photo</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="uploadOfficerDocument()" style="margin-top: 10px;">
+                                <i class="fas fa-upload"></i> Upload Document
+                            </button>
+                        </div>
+
+                        <div class="upload-card">
+                            <h4><i class="fas fa-info-circle"></i> Upload Guidelines</h4>
+                            <ul style="color: #8bb9ff; font-size: 0.85rem; line-height: 1.6;">
+                                <li>Maximum file size: 10MB</li>
+                                <li>Supported formats: PDF, Word, Images</li>
+                                <li>Name your files clearly</li>
+                                <li>Ensure documents are legible</li>
+                                <li>All uploads are logged</li>
+                                <li>Admin can view all uploaded documents</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Documents -->
+            <div id="myDocumentsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-folder"></i> My Documents</h2>
+                
+                <div id="myDocumentsGrid" class="documents-grid">
+                    <!-- Officer's documents will be loaded here -->
+                </div>
+            </div>
+
+            <!-- View Meeting Documents -->
+            <div id="viewMeetingDocsSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-file-pdf"></i> Meeting Documents</h2>
+                
+                <div id="meetingDocumentsGrid" class="documents-grid">
+                    <!-- Meeting documents will be loaded here -->
+                </div>
+            </div>
+
+            <!-- My Certificates -->
+            <div id="myCertificatesSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-certificate"></i> My Certificates</h2>
+                
+                <div id="myCertificatesGrid" class="documents-grid">
+                    <!-- Certificates will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Custom Forms for Officers -->
+            <div id="customFormsOfficerSection" class="dashboard-section">
+                <h2 class="section-title"><i class="fas fa-file-alt"></i> Forms</h2>
+                
+                <div id="officerFormsContainer">
+                    <!-- Custom forms will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Meeting Document Modal -->
+    <div id="addMeetingModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-plus"></i> Add Meeting Document</div>
+                <button class="close-btn" onclick="closeAddMeetingForm()">&times;</button>
+            </div>
+            <div id="meetingMessage" class="message"></div>
+            <form id="meetingForm">
+                <div class="form-group">
+                    <label class="form-label">Meeting Date</label>
+                    <input type="date" class="form-input" id="meetingDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Meeting Type</label>
+                    <select class="form-input" id="meetingType" required>
+                        <option value="">Select meeting type</option>
+                        <option value="General">General Meeting</option>
+                        <option value="Executive">Executive Committee</option>
+                        <option value="Annual">Annual Meeting</option>
+                        <option value="Special">Special Meeting</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload PDF Document</label>
+                    <div class="file-upload">
+                        <input type="file" class="file-input" id="pdfFile" accept=".pdf" required>
+                        <div class="file-name" id="fileName">No file chosen</div>
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0% uploaded</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveMeetingBtn">Save Document</button>
+                    <button type="button" onclick="closeAddMeetingForm()" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Certificate Modal -->
+    <div id="addCertificateModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-certificate"></i> Add Certificate Template</div>
+                <button class="close-btn" onclick="closeAddCertificateForm()">&times;</button>
+            </div>
+            <div id="certificateMessage" class="message"></div>
+            <form id="certificateForm">
+                <div class="form-group">
+                    <label class="form-label">Certificate Name</label>
+                    <input type="text" class="form-input" id="certificateName" required placeholder="e.g., 100km Running Certificate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Certificate Type</label>
+                    <select class="form-input" id="certificateType" required>
+                        <option value="">Select type</option>
+                        <option value="achievement">Achievement</option>
+                        <option value="completion">Completion</option>
+                        <option value="participation">Participation</option>
+                        <option value="distance">Distance</option>
+                        <option value="excellence">Excellence</option>
+                        <option value="winner">Winner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input" id="certificateDescription" rows="3" placeholder="Describe what this certificate represents"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Requirements (Optional)</label>
+                    <input type="text" class="form-input" id="certificateRequirements" placeholder="e.g., Run 100km, Complete 50 activities">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Required Value (Optional)</label>
+                    <input type="number" class="form-input" id="certificateRequiredValue" placeholder="e.g., 100 for 100km">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload Certificate Image (Optional)</label>
+                    <div class="file-upload">
+                        <input type="file" class="file-input" id="certificateImage" accept=".jpg,.jpeg,.png,.gif">
+                        <div class="file-name" id="certificateFileName">No file chosen</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Upload PDF Certificate (Optional)</label>
+                    <div class="file-upload">
+                        <input type="file" class="file-input" id="certificatePdf" accept=".pdf">
+                        <div class="file-name" id="certificatePdfFileName">No file chosen</div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="saveCertificateBtn">Save Certificate</button>
+                    <button type="button" onclick="closeAddCertificateForm()" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Certificate Preview Modal -->
+    <div id="certificatePreviewModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-eye"></i> Certificate Preview</div>
+                <button class="close-btn" onclick="closeCertificatePreview()">&times;</button>
+            </div>
+            <div id="certificatePreviewContainer" class="certificate-preview">
+                <!-- Certificate will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Preview Modal (View Only - No Download) -->
+    <div id="pdfPreviewModal" class="modal-overlay pdf-preview-modal">
+        <div class="modal-content" style="width: 95%; height: 90vh; max-width: none;">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-file-pdf"></i> Document Preview</div>
+                <button class="close-btn" onclick="closePdfPreview()">&times;</button>
+            </div>
+            <div class="pdf-preview-container">
+                <!-- PDF will be embedded here with view only -->
+                <iframe src="" class="pdf-viewer" id="pdfViewer" allow="autoplay"></iframe>
+                <div class="pdf-controls">
+                    <button class="pdf-control-btn" onclick="closePdfPreview()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Form Field Modal -->
+    <div id="addFormFieldModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-plus"></i> Add Form Field</div>
+                <button class="close-btn" onclick="closeAddFormField()">&times;</button>
+            </div>
+            <form id="addFormFieldForm">
+                <div class="form-group">
+                    <label class="form-label">Field Type</label>
+                    <select class="form-input" id="fieldType" required onchange="toggleFieldOptions()">
+                        <option value="">Select field type</option>
+                        <option value="text">Text Input</option>
+                        <option value="textarea">Text Area</option>
+                        <option value="number">Number</option>
+                        <option value="date">Date</option>
+                        <option value="select">Dropdown</option>
+                        <option value="checkbox">Checkbox</option>
+                        <option value="radio">Radio Buttons</option>
+                        <option value="file">File Upload</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Field Label</label>
+                    <input type="text" class="form-input" id="fieldLabel" required placeholder="Enter field label">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Field Name (Technical)</label>
+                    <input type="text" class="form-input" id="fieldName" required placeholder="e.g., officer_name">
+                </div>
+                <div class="form-group" id="fieldOptionsContainer" style="display: none;">
+                    <label class="form-label">Options (comma separated)</label>
+                    <input type="text" class="form-input" id="fieldOptions" placeholder="Option 1, Option 2, Option 3">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Is Required?</label>
+                    <select class="form-input" id="fieldRequired">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Help Text (Optional)</label>
+                    <input type="text" class="form-input" id="fieldHelp" placeholder="Help text for users">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Add Field</button>
+                    <button type="button" onclick="closeAddFormField()" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5ehnBufVrSd-mXN6pWIfqvzyMno6Cuoc",
+            authDomain: "faafupoliceclub2026.firebaseapp.com",
+            databaseURL: "https://faafupoliceclub2026-default-rtdb.firebaseio.com",
+            projectId: "faafupoliceclub2026",
+            storageBucket: "faafupoliceclub2026.firebasestorage.app",
+            messagingSenderId: "465802712690",
+            appId: "1:465802712690:web:45314b6d8903d6bc23d4eb",
+            measurementId: "G-K7V6YS4G2G"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // Global variables
+        let currentUser = null;
+        let currentOfficer = null;
+        let certificateImageFile = null;
+        let certificatePdfFile = null;
+        let accessControlSettings = {
+            allowUpload: true,
+            maxFileSize: 10,
+            allowMeetingPreview: true,
+            allowDocumentDownload: false,
+            allowCertificateView: true,
+            allowCertificateDownload: false,
+            allowProfileEdit: true,
+            allowViewOfficers: false
+        };
+        let customFormFields = [];
+        let announcements = [];
+    </script>
+
+    <script>
+        // Main application script
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing application...');
+            
+            // Initialize splash screen
+            initializeSplashScreen();
+            
+            // Initialize form handlers
+            initializeFormHandlers();
+            
+            // Load access control settings
+            loadAccessControlSettings();
+        });
+
+        // Initialize splash screen
+        function initializeSplashScreen() {
+            const splashScreen = document.getElementById('splashScreen');
+            const mainContent = document.getElementById('mainContent');
+            
+            // Show splash screen for 2.5 seconds
+            setTimeout(() => {
+                splashScreen.style.opacity = '0';
+                splashScreen.style.visibility = 'hidden';
+                
+                setTimeout(() => {
+                    mainContent.classList.add('show');
+                    console.log('Main content shown');
+                }, 300);
+            }, 2500);
+        }
+
+        // Initialize form handlers
+        function initializeFormHandlers() {
+            // Login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            
+            // Register form
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+            
+            // Admin login form
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', handleAdminLogin);
+            }
+            
+            // Meeting form
+            const meetingForm = document.getElementById('meetingForm');
+            if (meetingForm) {
+                meetingForm.addEventListener('submit', handleMeetingSubmit);
+            }
+            
+            // Certificate form
+            const certificateForm = document.getElementById('certificateForm');
+            if (certificateForm) {
+                certificateForm.addEventListener('submit', handleCertificateSubmit);
+            }
+            
+            // Add form field form
+            const addFormFieldForm = document.getElementById('addFormFieldForm');
+            if (addFormFieldForm) {
+                addFormFieldForm.addEventListener('submit', handleAddFormField);
+            }
+            
+            // File input displays
+            const pdfFileInput = document.getElementById('pdfFile');
+            if (pdfFileInput) {
+                pdfFileInput.addEventListener('change', function(e) {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+                    const fileNameElement = document.getElementById('fileName');
+                    if (fileNameElement) {
+                        fileNameElement.textContent = fileName;
+                    }
+                });
+            }
+            
+            const certificateImageInput = document.getElementById('certificateImage');
+            if (certificateImageInput) {
+                certificateImageInput.addEventListener('change', function(e) {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+                    const fileNameElement = document.getElementById('certificateFileName');
+                    if (fileNameElement) {
+                        fileNameElement.textContent = fileName;
+                    }
+                    certificateImageFile = this.files[0];
+                });
+            }
+            
+            const certificatePdfInput = document.getElementById('certificatePdf');
+            if (certificatePdfInput) {
+                certificatePdfInput.addEventListener('change', function(e) {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+                    const fileNameElement = document.getElementById('certificatePdfFileName');
+                    if (fileNameElement) {
+                        fileNameElement.textContent = fileName;
+                    }
+                    certificatePdfFile = this.files[0];
+                });
+            }
+            
+            // Officer document upload
+            const officerDocumentInput = document.getElementById('officerDocument');
+            if (officerDocumentInput) {
+                officerDocumentInput.addEventListener('change', function(e) {
+                    const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+                    const fileNameElement = document.getElementById('officerFileName');
+                    if (fileNameElement) {
+                        fileNameElement.textContent = fileName;
+                    }
+                });
+            }
+            
+            // Initialize date picker to today
+            const meetingDateInput = document.getElementById('meetingDate');
+            if (meetingDateInput) {
+                meetingDateInput.valueAsDate = new Date();
+            }
+            
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        if (this.id === 'registerModal') closeRegisterForm();
+                        if (this.id === 'adminLoginModal') closeAdminLogin();
+                        if (this.id === 'addMeetingModal') closeAddMeetingForm();
+                        if (this.id === 'addCertificateModal') closeAddCertificateForm();
+                        if (this.id === 'certificatePreviewModal') closeCertificatePreview();
+                        if (this.id === 'pdfPreviewModal') closePdfPreview();
+                        if (this.id === 'addFormFieldModal') closeAddFormField();
+                    }
+                });
+            });
+        }
+
+        // Show message function
+        function showMessage(elementId, message, type) {
+            const messageEl = document.getElementById(elementId);
+            if (messageEl) {
+                messageEl.textContent = message;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+                
+                if (type === 'success') {
+                    setTimeout(() => {
+                        messageEl.style.display = 'none';
+                    }, 5000);
+                }
+            }
+        }
+
+        // Register form functions
+        function showRegisterForm() {
+            document.getElementById('registerModal').style.display = 'flex';
+            document.getElementById('registerMessage').style.display = 'none';
+        }
+
+        function closeRegisterForm() {
+            document.getElementById('registerModal').style.display = 'none';
+            document.getElementById('registerForm').reset();
+        }
+
+        // Admin login functions
+        function showAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'flex';
+            document.getElementById('adminMessage').style.display = 'none';
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').style.display = 'none';
+            document.getElementById('adminLoginForm').reset();
+        }
+
+        // Handle login (officer user)
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const serviceNumber = document.getElementById('serviceNumber').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+            
+            if (!serviceNumber || !password) {
+                showMessage('loginMessage', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+            
+            try {
+                const snapshot = await database.ref('users/' + serviceNumber).once('value');
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === password) {
+                        if (userData.status === 'approved') {
+                            currentOfficer = userData;
+                            showMessage('loginMessage', 'Login successful!', 'success');
+                            
+                            // Load announcements for officer
+                            loadAnnouncementsForOfficer();
+                            
+                            // Load access control settings
+                            await loadAccessControlSettings();
+                            
+                            // Show officer dashboard
+                            setTimeout(() => {
+                                showOfficerDashboard();
+                            }, 1000);
+                        } else {
+                            showMessage('loginMessage', 'Your account is pending admin approval.', 'info');
+                        }
+                    } else {
+                        showMessage('loginMessage', 'Invalid password.', 'error');
+                    }
+                } else {
+                    showMessage('loginMessage', 'Officer not found.', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('loginMessage', 'Error: ' + error.message, 'error');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtnText.textContent = 'Sign In';
+            }
+        }
+
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const fullName = document.getElementById('regFullName').value;
+            const serviceNumber = document.getElementById('regServiceNumber').value;
+            const contact = document.getElementById('regContact').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showMessage('registerMessage', 'Passwords do not match', 'error');
+                return;
+            }
+            
+            if (!fullName || !serviceNumber || !contact || !password) {
+                showMessage('registerMessage', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            try {
+                // Check if officer already exists
+                const snapshot = await database.ref('users/' + serviceNumber).once('value');
+                if (snapshot.exists()) {
+                    showMessage('registerMessage', 'Service number already registered', 'error');
+                    return;
+                }
+                
+                // Create officer object
+                const officerData = {
+                    fullName: fullName,
+                    serviceNumber: serviceNumber,
+                    contact: contact,
+                    password: password,
+                    status: 'pending',
+                    role: 'officer',
+                    registrationDate: new Date().toISOString(),
+                    documents: {}
+                };
+                
+                // Save to Firebase
+                await database.ref('users/' + serviceNumber).set(officerData);
+                showMessage('registerMessage', 'Registration successful! Waiting for admin approval.', 'success');
+                
+                setTimeout(() => {
+                    closeRegisterForm();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('registerMessage', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        // Handle admin login
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            
+            const adminId = document.getElementById('adminId').value;
+            const adminPassword = document.getElementById('adminPassword').value;
+            
+            if (!adminId || !adminPassword) {
+                showMessage('adminMessage', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Check admin credentials
+            if (adminId === 'Admin' && adminPassword === 'Admin123') {
+                showMessage('adminMessage', 'Admin login successful!', 'success');
+                localStorage.setItem('isAdmin', 'true');
+                setTimeout(() => {
+                    closeAdminLogin();
+                    showAdminDashboard();
+                }, 1000);
+            } else {
+                showMessage('adminMessage', 'Invalid admin credentials. Use: Admin / Admin123', 'error');
+            }
+        }
+
+        // Show admin dashboard
+        async function showAdminDashboard() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('officerDashboard').style.display = 'none';
+            loadPendingRegistrations();
+            loadMeetingDocuments();
+            loadAllUsers();
+            loadCertificates();
+            loadOfficerDocumentsForAdmin();
+            loadAccessControlSettings();
+            loadCustomForms();
+            loadAnnouncements();
+        }
+
+        // Show officer dashboard
+        async function showOfficerDashboard() {
+            if (!currentOfficer) return;
+            
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('officerDashboard').style.display = 'block';
+            
+            // Update officer name
+            document.getElementById('officerName').textContent = currentOfficer.fullName;
+            document.getElementById('dashboardOfficerName').textContent = currentOfficer.fullName;
+            
+            // Load officer data
+            loadOfficerProfile();
+            loadOfficerDocuments();
+            loadMeetingDocumentsForOfficer();
+            loadOfficerCertificates();
+            
+            // Update UI based on access control
+            updateOfficerUI();
+            
+            // Load custom forms for officer
+            loadCustomFormsForOfficer();
+        }
+
+        // Update officer UI based on access control
+        function updateOfficerUI() {
+            // Show/hide upload section
+            const uploadSection = document.getElementById('uploadDocumentsSection');
+            if (uploadSection) {
+                uploadSection.style.display = accessControlSettings.allowUpload ? 'block' : 'none';
+            }
+            
+            // Update file size limit
+            const fileSizeText = document.querySelector('.upload-card ul li:first-child');
+            if (fileSizeText && accessControlSettings.maxFileSize) {
+                fileSizeText.textContent = `Maximum file size: ${accessControlSettings.maxFileSize}MB`;
+            }
+            
+            // Update sidebar menu
+            updateOfficerSidebar();
+        }
+
+        // Update officer sidebar based on access control
+        function updateOfficerSidebar() {
+            const dynamicMenu = document.getElementById('dynamicOfficerMenu');
+            if (!dynamicMenu) return;
+            
+            dynamicMenu.innerHTML = '';
+            
+            // Add forms menu item if custom forms exist
+            if (customFormFields.length > 0) {
+                const formsItem = document.createElement('a');
+                formsItem.href = '#';
+                formsItem.className = 'menu-item';
+                formsItem.onclick = () => showOfficerSection('customFormsOfficer');
+                formsItem.innerHTML = `
+                    <i class="fas fa-file-alt"></i>
+                    <span>Forms</span>
+                `;
+                dynamicMenu.appendChild(formsItem);
+            }
+            
+            // Add view officers if allowed
+            if (accessControlSettings.allowViewOfficers) {
+                const officersItem = document.createElement('a');
+                officersItem.href = '#';
+                officersItem.className = 'menu-item';
+                officersItem.onclick = () => showOfficerSection('viewOfficers');
+                officersItem.innerHTML = `
+                    <i class="fas fa-users"></i>
+                    <span>View Officers</span>
+                `;
+                dynamicMenu.appendChild(officersItem);
+                
+                // Create view officers section
+                createViewOfficersSection();
+            }
+        }
+
+        // Create view officers section
+        function createViewOfficersSection() {
+            const officerMainPanel = document.getElementById('officerMainPanel');
+            if (!officerMainPanel) return;
+            
+            // Check if section already exists
+            if (!document.getElementById('viewOfficersSection')) {
+                const section = document.createElement('div');
+                section.id = 'viewOfficersSection';
+                section.className = 'dashboard-section';
+                section.innerHTML = `
+                    <h2 class="section-title"><i class="fas fa-users"></i> View Officers</h2>
+                    <div id="viewOfficersGrid" class="documents-grid">
+                        Loading officers...
+                    </div>
+                `;
+                officerMainPanel.appendChild(section);
+                
+                // Load officers for viewing
+                loadOfficersForViewing();
+            }
+        }
+
+        // Load officers for viewing by other officers
+        async function loadOfficersForViewing() {
+            try {
+                const snapshot = await database.ref('users').orderByChild('status').equalTo('approved').once('value');
+                const container = document.getElementById('viewOfficersGrid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const officer = childSnapshot.val();
+                        // Don't show current officer
+                        if (currentOfficer && officer.serviceNumber === currentOfficer.serviceNumber) return;
+                        
+                        const officerCard = document.createElement('div');
+                        officerCard.className = 'document-card';
+                        
+                        officerCard.innerHTML = `
+                            <h4>${officer.fullName || 'N/A'}</h4>
+                            <div class="document-meta">
+                                <span>Service No: ${officer.serviceNumber}</span>
+                                <span>Officer</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                Contact: ${officer.contact || 'N/A'}
+                            </p>
+                            <p style="color: #6b8db3; font-size: 0.8rem;">
+                                Member since: ${officer.registrationDate ? new Date(officer.registrationDate).toLocaleDateString() : 'N/A'}
+                            </p>
+                        `;
+                        
+                        container.appendChild(officerCard);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No other officers found.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading officers for viewing:', error);
+            }
+        }
+
+        // Sidebar functions for admin
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                sidebar.classList.add('open');
+                overlay.style.display = 'block';
+            }
+        }
+
+        // Sidebar functions for officer
+        function toggleOfficerSidebar() {
+            const sidebar = document.getElementById('officerSidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                sidebar.classList.add('open');
+                overlay.style.display = 'block';
+            }
+        }
+
+        // Show section function for admin
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('#adminDashboard .dashboard-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId + 'Section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update active menu item
+            const menuItems = document.querySelectorAll('#adminDashboard .menu-item');
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+
+        // Show section function for officer
+        function showOfficerSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('#officerDashboard .dashboard-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionId + 'Section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update active menu item
+            const menuItems = document.querySelectorAll('#officerDashboard .menu-item');
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                toggleOfficerSidebar();
+            }
+        }
+
+        // Load pending registrations
+        async function loadPendingRegistrations() {
+            try {
+                const snapshot = await database.ref('users').orderByChild('status').equalTo('pending').once('value');
+                const tbody = document.getElementById('pendingTableBody');
+                if (!tbody) return;
+                
+                tbody.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const user = childSnapshot.val();
+                        const row = document.createElement('tr');
+                        
+                        row.innerHTML = `
+                            <td>${user.fullName || 'N/A'}</td>
+                            <td>${user.serviceNumber || 'N/A'}</td>
+                            <td>${user.contact || 'N/A'}</td>
+                            <td>${user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : 'N/A'}</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-primary btn-small" onclick="approveUser('${user.serviceNumber}')">Approve</button>
+                                <button class="btn btn-danger btn-small" onclick="rejectUser('${user.serviceNumber}')">Reject</button>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No pending registrations</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading pending registrations:', error);
+            }
+        }
+
+        // Load all officers
+        async function loadAllUsers() {
+            try {
+                const snapshot = await database.ref('users').once('value');
+                const tbody = document.getElementById('usersTableBody');
+                if (!tbody) return;
+                
+                tbody.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const user = childSnapshot.val();
+                        const row = document.createElement('tr');
+                        
+                        row.innerHTML = `
+                            <td>${user.fullName || 'N/A'}</td>
+                            <td>${user.serviceNumber || 'N/A'}</td>
+                            <td>${user.contact || 'N/A'}</td>
+                            <td><span class="status-badge ${user.status === 'approved' ? 'status-approved' : 'status-pending'}">${user.status || 'pending'}</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-primary btn-small" onclick="viewOfficerDocuments('${user.serviceNumber}', '${user.fullName}')">
+                                    <i class="fas fa-folder"></i> Docs
+                                </button>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No officers found</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error loading officers:', error);
+            }
+        }
+
+        // View officer documents from admin panel
+        async function viewOfficerDocuments(serviceNumber, officerName) {
+            try {
+                const snapshot = await database.ref(`user_documents/${serviceNumber}`).once('value');
+                const container = document.getElementById('officerDocumentsGrid');
+                if (!container) return;
+                
+                // Show officer documents section
+                showSection('officerDocuments');
+                
+                container.innerHTML = '<h3 style="color: #1e90ff; margin-bottom: 15px;">' + officerName + '\'s Documents</h3>';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const doc = childSnapshot.val();
+                        const docElement = document.createElement('div');
+                        docElement.className = 'document-card';
+                        
+                        docElement.innerHTML = `
+                            <h4>${doc.title || 'Untitled Document'}</h4>
+                            <div class="document-meta">
+                                <span>${doc.type || 'Document'}</span>
+                                <span>${doc.uploadDate ? new Date(doc.uploadDate).toLocaleDateString() : 'N/A'}</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                ${(doc.fileSize / 1024).toFixed(2)} KB
+                            </p>
+                            <div class="document-actions">
+                                <button class="btn-small btn-primary" onclick="previewDocument('${doc.downloadURL}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        `;
+                        
+                        container.appendChild(docElement);
+                    });
+                } else {
+                    container.innerHTML += '<div class="card"><div class="card-content">No documents uploaded by this officer.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading officer documents:', error);
+            }
+        }
+
+        // Load officer documents for admin view
+        async function loadOfficerDocumentsForAdmin() {
+            try {
+                const snapshot = await database.ref('user_documents').once('value');
+                const container = document.getElementById('officerDocumentsGrid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    // Get all officers first
+                    const officersSnapshot = await database.ref('users').once('value');
+                    const officers = {};
+                    
+                    officersSnapshot.forEach((childSnapshot) => {
+                        const officer = childSnapshot.val();
+                        officers[officer.serviceNumber] = officer.fullName;
+                    });
+                    
+                    snapshot.forEach((officerSnapshot) => {
+                        const serviceNumber = officerSnapshot.key;
+                        const officerName = officers[serviceNumber] || serviceNumber;
+                        
+                        const officerSection = document.createElement('div');
+                        officerSection.className = 'card';
+                        officerSection.innerHTML = `
+                            <div class="card-header">
+                                <div class="card-title">${officerName} (${serviceNumber})</div>
+                            </div>
+                            <div class="card-content">
+                                <div id="docs-${serviceNumber}" class="documents-grid" style="grid-template-columns: 1fr;">
+                                    <!-- Documents for this officer will be loaded here -->
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(officerSection);
+                        
+                        // Load documents for this officer
+                        loadDocumentsForOfficer(serviceNumber, officerName);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No officer documents uploaded yet.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading officer documents for admin:', error);
+            }
+        }
+
+        // Load documents for specific officer
+        async function loadDocumentsForOfficer(serviceNumber, officerName) {
+            try {
+                const snapshot = await database.ref(`user_documents/${serviceNumber}`).once('value');
+                const container = document.getElementById(`docs-${serviceNumber}`);
+                if (!container) return;
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const doc = childSnapshot.val();
+                        const docElement = document.createElement('div');
+                        docElement.className = 'document-card';
+                        
+                        docElement.innerHTML = `
+                            <h4>${doc.title || 'Untitled Document'}</h4>
+                            <div class="document-meta">
+                                <span>${doc.type || 'Document'}</span>
+                                <span>${doc.uploadDate ? new Date(doc.uploadDate).toLocaleDateString() : 'N/A'}</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                ${(doc.fileSize / 1024).toFixed(2)} KB
+                            </p>
+                            <div class="document-actions">
+                                <button class="btn-small btn-primary" onclick="previewDocument('${doc.downloadURL}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        `;
+                        
+                        container.appendChild(docElement);
+                    });
+                } else {
+                    container.innerHTML = '<p style="color: #6b8db3; text-align: center;">No documents uploaded</p>';
+                }
+            } catch (error) {
+                console.error('Error loading documents for officer:', error);
+            }
+        }
+
+        // Approve officer function
+        async function approveUser(serviceNumber) {
+            if (!serviceNumber) return;
+            
+            try {
+                await database.ref('users/' + serviceNumber).update({
+                    status: 'approved',
+                    approvedDate: new Date().toISOString()
+                });
+                alert('Officer approved successfully!');
+                loadPendingRegistrations();
+                loadAllUsers();
+            } catch (error) {
+                alert('Error approving officer: ' + error.message);
+            }
+        }
+
+        // Reject officer function
+        async function rejectUser(serviceNumber) {
+            if (!serviceNumber) return;
+            
+            if (confirm('Are you sure you want to reject this registration?')) {
+                try {
+                    await database.ref('users/' + serviceNumber).remove();
+                    alert('Officer registration rejected!');
+                    loadPendingRegistrations();
+                    loadAllUsers();
+                } catch (error) {
+                    alert('Error rejecting officer: ' + error.message);
+                }
+            }
+        }
+
+        // Meeting Documents functions
+        function showAddMeetingForm() {
+            document.getElementById('addMeetingModal').style.display = 'flex';
+            document.getElementById('meetingMessage').style.display = 'none';
+        }
+
+        function closeAddMeetingForm() {
+            document.getElementById('addMeetingModal').style.display = 'none';
+            const meetingForm = document.getElementById('meetingForm');
+            if (meetingForm) meetingForm.reset();
+            const fileNameElement = document.getElementById('fileName');
+            if (fileNameElement) fileNameElement.textContent = 'No file chosen';
+        }
+
+        // Handle meeting document submission
+        async function handleMeetingSubmit(e) {
+            e.preventDefault();
+            
+            const meetingDate = document.getElementById('meetingDate').value;
+            const meetingType = document.getElementById('meetingType').value;
+            const pdfFile = document.getElementById('pdfFile').files[0];
+            const saveMeetingBtn = document.getElementById('saveMeetingBtn');
+            
+            if (!meetingDate || !meetingType || !pdfFile) {
+                showMessage('meetingMessage', 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Validate file size (max 10MB)
+            if (pdfFile.size > 10 * 1024 * 1024) {
+                showMessage('meetingMessage', 'File size too large. Maximum size is 10MB.', 'error');
+                return;
+            }
+            
+            // Validate file type
+            if (pdfFile.type !== 'application/pdf') {
+                showMessage('meetingMessage', 'Only PDF files are allowed.', 'error');
+                return;
+            }
+            
+            // Generate unique ID for meeting
+            const meetingId = 'meeting_' + Date.now();
+            
+            try {
+                // Disable save button and show progress
+                saveMeetingBtn.disabled = true;
+                saveMeetingBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                
+                // Create storage reference
+                const storageRef = firebase.storage().ref();
+                const fileName = `meeting_documents/${meetingId}_${pdfFile.name.replace(/\s+/g, '_')}`;
+                const fileRef = storageRef.child(fileName);
+                
+                // Upload PDF to Firebase Storage
+                const uploadTask = fileRef.put(pdfFile);
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Progress monitoring (optional)
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                    },
+                    (error) => {
+                        console.error('Upload error:', error);
+                        saveMeetingBtn.disabled = false;
+                        saveMeetingBtn.innerHTML = 'Save Document';
+                        showMessage('meetingMessage', 'Upload failed: ' + error.message, 'error');
+                    },
+                    async () => {
+                        try {
+                            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                            
+                            const meetingData = {
+                                date: meetingDate,
+                                type: meetingType,
+                                pdfUrl: downloadURL,
+                                pdfName: pdfFile.name,
+                                uploadDate: new Date().toISOString(),
+                                meetingId: meetingId,
+                                fileSize: pdfFile.size
+                            };
+                            
+                            await database.ref('meetings/' + meetingId).set(meetingData);
+                            
+                            showMessage('meetingMessage', 'Meeting document saved successfully!', 'success');
+                            
+                            setTimeout(() => {
+                                closeAddMeetingForm();
+                                loadMeetingDocuments();
+                                saveMeetingBtn.disabled = false;
+                                saveMeetingBtn.innerHTML = 'Save Document';
+                            }, 1500);
+                            
+                        } catch (dbError) {
+                            console.error('Database error:', dbError);
+                            saveMeetingBtn.disabled = false;
+                            saveMeetingBtn.innerHTML = 'Save Document';
+                            showMessage('meetingMessage', 'Error saving meeting data: ' + dbError.message, 'error');
+                        }
+                    }
+                );
+                
+            } catch (error) {
+                console.error('General error:', error);
+                saveMeetingBtn.disabled = false;
+                saveMeetingBtn.innerHTML = 'Save Document';
+                showMessage('meetingMessage', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        // Load meeting documents for admin
+        async function loadMeetingDocuments() {
+            try {
+                const snapshot = await database.ref('meetings').orderByChild('uploadDate').once('value');
+                const container = document.getElementById('meetingDocumentsList');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const meeting = childSnapshot.val();
+                        const docElement = document.createElement('div');
+                        docElement.className = 'document-item';
+                        
+                        docElement.innerHTML = `
+                            <div class="document-info">
+                                <h4>${meeting.type || 'Meeting'} Meeting</h4>
+                                <p>Date: ${meeting.date ? new Date(meeting.date).toLocaleDateString() : 'N/A'} | Uploaded: ${meeting.uploadDate ? new Date(meeting.uploadDate).toLocaleDateString() : 'N/A'}</p>
+                                <small style="color: #6b8db3;">${meeting.fileSize ? (meeting.fileSize / 1024 / 1024).toFixed(2) + ' MB' : ''}</small>
+                            </div>
+                            <button class="preview-btn" onclick="previewDocument('${meeting.pdfUrl}')">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                        `;
+                        
+                        container.appendChild(docElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No meeting documents uploaded yet.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading meetings:', error);
+            }
+        }
+
+        // Load meeting documents for officer (VIEW ONLY)
+        async function loadMeetingDocumentsForOfficer() {
+            try {
+                const snapshot = await database.ref('meetings').orderByChild('uploadDate').once('value');
+                const container = document.getElementById('meetingDocumentsGrid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const meeting = childSnapshot.val();
+                        const docElement = document.createElement('div');
+                        docElement.className = 'document-card';
+                        
+                        docElement.innerHTML = `
+                            <h4>${meeting.type || 'Meeting'} Meeting</h4>
+                            <div class="document-meta">
+                                <span>Meeting</span>
+                                <span>${meeting.date ? new Date(meeting.date).toLocaleDateString() : 'N/A'}</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                ${meeting.pdfName || 'Meeting Document'}
+                            </p>
+                            <div class="document-actions">
+                                <button class="btn-small btn-primary" onclick="previewDocument('${meeting.pdfUrl}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        `;
+                        
+                        container.appendChild(docElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No meeting documents available.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading meetings for officer:', error);
+            }
+        }
+
+        // Preview document (VIEW ONLY - NO DOWNLOAD)
+        function previewDocument(url) {
+            const pdfViewer = document.getElementById('pdfViewer');
+            if (pdfViewer) {
+                // Set the PDF URL with #toolbar=0 to hide download buttons
+                pdfViewer.src = url + '#toolbar=0&navpanes=0';
+                document.getElementById('pdfPreviewModal').style.display = 'flex';
+            }
+        }
+
+        // Close PDF preview
+        function closePdfPreview() {
+            document.getElementById('pdfPreviewModal').style.display = 'none';
+            const pdfViewer = document.getElementById('pdfViewer');
+            if (pdfViewer) {
+                pdfViewer.src = '';
+            }
+        }
+
+        // Certificate Management Functions
+        function showAddCertificateForm() {
+            document.getElementById('addCertificateModal').style.display = 'flex';
+            document.getElementById('certificateMessage').style.display = 'none';
+        }
+
+        function closeAddCertificateForm() {
+            document.getElementById('addCertificateModal').style.display = 'none';
+            const certificateForm = document.getElementById('certificateForm');
+            if (certificateForm) certificateForm.reset();
+            certificateImageFile = null;
+            certificatePdfFile = null;
+            document.getElementById('certificateFileName').textContent = 'No file chosen';
+            document.getElementById('certificatePdfFileName').textContent = 'No file chosen';
+        }
+
+        // Handle certificate submission
+        async function handleCertificateSubmit(e) {
+            e.preventDefault();
+            
+            const certificateName = document.getElementById('certificateName').value;
+            const certificateType = document.getElementById('certificateType').value;
+            const certificateDescription = document.getElementById('certificateDescription').value;
+            const certificateRequirements = document.getElementById('certificateRequirements').value;
+            const certificateRequiredValue = document.getElementById('certificateRequiredValue').value;
+            const saveCertificateBtn = document.getElementById('saveCertificateBtn');
+            
+            if (!certificateName || !certificateType) {
+                showMessage('certificateMessage', 'Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                saveCertificateBtn.disabled = true;
+                saveCertificateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                
+                const certificateId = 'cert_' + Date.now();
+                let imageUrl = '';
+                let pdfUrl = '';
+                
+                // Upload image if provided
+                if (certificateImageFile) {
+                    const storageRef = firebase.storage().ref();
+                    const imageFileName = `certificates/images/${certificateId}_${certificateImageFile.name.replace(/\s+/g, '_')}`;
+                    const imageRef = storageRef.child(imageFileName);
+                    
+                    const imageUploadTask = imageRef.put(certificateImageFile);
+                    const imageSnapshot = await imageUploadTask;
+                    imageUrl = await imageSnapshot.ref.getDownloadURL();
+                }
+                
+                // Upload PDF if provided
+                if (certificatePdfFile) {
+                    const storageRef = firebase.storage().ref();
+                    const pdfFileName = `certificates/pdfs/${certificateId}_${certificatePdfFile.name.replace(/\s+/g, '_')}`;
+                    const pdfRef = storageRef.child(pdfFileName);
+                    
+                    const pdfUploadTask = pdfRef.put(certificatePdfFile);
+                    const pdfSnapshot = await pdfUploadTask;
+                    pdfUrl = await pdfSnapshot.ref.getDownloadURL();
+                }
+                
+                // Save certificate data to database
+                const certificateData = {
+                    id: certificateId,
+                    name: certificateName,
+                    type: certificateType,
+                    description: certificateDescription,
+                    requirements: certificateRequirements || null,
+                    requiredValue: certificateRequiredValue ? parseInt(certificateRequiredValue) : null,
+                    imageUrl: imageUrl,
+                    pdfUrl: pdfUrl,
+                    createdDate: new Date().toISOString(),
+                    createdBy: 'Admin',
+                    isActive: true
+                };
+                
+                await database.ref('certificates/' + certificateId).set(certificateData);
+                
+                showMessage('certificateMessage', 'Certificate saved successfully!', 'success');
+                
+                setTimeout(() => {
+                    closeAddCertificateForm();
+                    loadCertificates();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error saving certificate:', error);
+                showMessage('certificateMessage', 'Error saving certificate: ' + error.message, 'error');
+            } finally {
+                saveCertificateBtn.disabled = false;
+                saveCertificateBtn.innerHTML = 'Save Certificate';
+            }
+        }
+
+        // Load certificates
+        async function loadCertificates() {
+            try {
+                const snapshot = await database.ref('certificates').orderByChild('createdDate').once('value');
+                const container = document.getElementById('certificatesList');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const certificate = childSnapshot.val();
+                        const certElement = document.createElement('div');
+                        certElement.className = 'certificate-card';
+                        
+                        certElement.innerHTML = `
+                            <div style="display: flex; gap: 15px; align-items: flex-start;">
+                                ${certificate.imageUrl ? 
+                                    `<img src="${certificate.imageUrl}" alt="${certificate.name}" class="certificate-image">` : 
+                                    `<div class="certificate-image" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e90ff, #0077cc);">
+                                        <i class="fas fa-certificate" style="font-size: 2rem; color: white;"></i>
+                                    </div>`}
+                                <div style="flex: 1;">
+                                    <h3 style="color: #1e90ff; margin-bottom: 5px;">${certificate.name}</h3>
+                                    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                                        <span class="status-badge" style="background: ${getCertificateColor(certificate.type)};">
+                                            ${certificate.type}
+                                        </span>
+                                        ${certificate.isActive ? 
+                                            '<span class="status-badge status-approved">Active</span>' : 
+                                            '<span class="status-badge status-rejected">Inactive</span>'}
+                                    </div>
+                                    <p style="color: #8bb9ff; margin-bottom: 10px; font-size: 0.9rem;">${certificate.description || 'No description'}</p>
+                                    ${certificate.requirements ? 
+                                        `<p style="color: #6b8db3; font-size: 0.85rem; margin-bottom: 10px;">
+                                            <strong>Requirements:</strong> ${certificate.requirements}
+                                            ${certificate.requiredValue ? ` (${certificate.requiredValue})` : ''}
+                                        </p>` : ''}
+                                    <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                        <button class="btn-small btn-primary" onclick="previewCertificate('${certificate.id}')">
+                                            <i class="fas fa-eye"></i> Preview
+                                        </button>
+                                        ${certificate.pdfUrl ? 
+                                            `<button class="btn-small btn-secondary" onclick="downloadDocument('${certificate.pdfUrl}', '${certificate.name}')">
+                                                <i class="fas fa-download"></i> Download PDF
+                                            </button>` : ''}
+                                        <button class="btn-small btn-danger" onclick="deleteCertificate('${certificate.id}')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        container.appendChild(certElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No certificates found. Add your first certificate!</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading certificates:', error);
+            }
+        }
+
+        // Load officer certificates (with access control)
+        async function loadOfficerCertificates() {
+            try {
+                const snapshot = await database.ref('certificates').orderByChild('createdDate').once('value');
+                const container = document.getElementById('myCertificatesGrid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const certificate = childSnapshot.val();
+                        if (!certificate.isActive) return;
+                        
+                        const certElement = document.createElement('div');
+                        certElement.className = 'document-card';
+                        
+                        certElement.innerHTML = `
+                            <h4>${certificate.name}</h4>
+                            <div class="document-meta">
+                                <span>${certificate.type}</span>
+                                <span>Certificate</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                ${certificate.description || 'No description available'}
+                            </p>
+                            <div class="document-actions">
+                                <button class="btn-small btn-primary" onclick="previewCertificate('${certificate.id}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                ${certificate.pdfUrl && accessControlSettings.allowCertificateDownload ? 
+                                    `<button class="btn-small btn-secondary" onclick="downloadDocument('${certificate.pdfUrl}', '${certificate.name}')">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>` : ''}
+                            </div>
+                        `;
+                        
+                        container.appendChild(certElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No certificates available.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading officer certificates:', error);
+            }
+        }
+
+        // Get certificate color by type
+        function getCertificateColor(type) {
+            switch(type.toLowerCase()) {
+                case 'achievement': return 'rgba(46, 204, 113, 0.2)';
+                case 'completion': return 'rgba(52, 152, 219, 0.2)';
+                case 'participation': return 'rgba(155, 89, 182, 0.2)';
+                case 'distance': return 'rgba(230, 126, 34, 0.2)';
+                case 'excellence': return 'rgba(241, 196, 15, 0.2)';
+                case 'winner': return 'rgba(231, 76, 60, 0.2)';
+                default: return 'rgba(30, 144, 255, 0.2)';
+            }
+        }
+
+        // Preview certificate
+        async function previewCertificate(certificateId) {
+            try {
+                const snapshot = await database.ref('certificates/' + certificateId).once('value');
+                const certificate = snapshot.val();
+                
+                if (!certificate) {
+                    alert('Certificate not found.');
+                    return;
+                }
+                
+                const container = document.getElementById('certificatePreviewContainer');
+                container.innerHTML = `
+                    <div class="certificate-template">
+                        <h1>Certificate of ${certificate.type}</h1>
+                        <h2>${certificate.name}</h2>
+                        <p>${certificate.description || ''}</p>
+                        ${certificate.requirements ? `<p><strong>Requirements:</strong> ${certificate.requirements}</p>` : ''}
+                        <p>Awarded by FAAFU Police Club</p>
+                        <p>Date: ${new Date().toLocaleDateString()}</p>
+                    </div>
+                    <div style="padding: 20px; text-align: center;">
+                        ${certificate.pdfUrl && accessControlSettings.allowCertificateDownload ? 
+                            `<button class="btn btn-primary" onclick="downloadDocument('${certificate.pdfUrl}', '${certificate.name}')">
+                                <i class="fas fa-download"></i> Download PDF
+                            </button>` : ''}
+                    </div>
+                `;
+                
+                document.getElementById('certificatePreviewModal').style.display = 'flex';
+            } catch (error) {
+                console.error('Error previewing certificate:', error);
+                alert('Error loading certificate.');
+            }
+        }
+
+        // Download document (only used for certificates when allowed)
+        function downloadDocument(url, filename) {
+            if (!accessControlSettings.allowCertificateDownload && !accessControlSettings.allowDocumentDownload) {
+                alert('Downloading is not allowed.');
+                return;
+            }
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename.replace(/\s+/g, '_') + '.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close certificate preview
+        function closeCertificatePreview() {
+            document.getElementById('certificatePreviewModal').style.display = 'none';
+        }
+
+        // Delete certificate
+        async function deleteCertificate(certificateId) {
+            if (!confirm('Are you sure you want to delete this certificate?')) {
+                return;
+            }
+            
+            try {
+                await database.ref('certificates/' + certificateId).remove();
+                alert('Certificate deleted successfully!');
+                loadCertificates();
+            } catch (error) {
+                console.error('Error deleting certificate:', error);
+                alert('Error deleting certificate.');
+            }
+        }
+
+        // Manage certificates
+        async function manageCertificates() {
+            showSection('certificates');
+            loadCertificates();
+        }
+
+        // Load officer profile
+        async function loadOfficerProfile() {
+            if (!currentOfficer) return;
+            
+            const container = document.getElementById('officerProfileContent');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #1e90ff, #0077cc); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <div>
+                            <h3 style="color: #1e90ff; margin-bottom: 5px;">${currentOfficer.fullName}</h3>
+                            <p style="color: #8bb9ff;">Service Number: ${currentOfficer.serviceNumber}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <p style="color: #a8d0ff; margin-bottom: 5px;">Contact Number</p>
+                            <p style="color: #e0f0ff;">${currentOfficer.contact || 'Not provided'}</p>
+                        </div>
+                        <div>
+                            <p style="color: #a8d0ff; margin-bottom: 5px;">Status</p>
+                            <p><span class="status-badge status-approved">Approved</span></p>
+                        </div>
+                        <div>
+                            <p style="color: #a8d0ff; margin-bottom: 5px;">Registration Date</p>
+                            <p style="color: #e0f0ff;">${currentOfficer.registrationDate ? new Date(currentOfficer.registrationDate).toLocaleDateString() : 'N/A'}</p>
+                        </div>
+                        <div>
+                            <p style="color: #a8d0ff; margin-bottom: 5px;">Role</p>
+                            <p style="color: #e0f0ff;">${currentOfficer.role || 'Officer'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Upload officer document (with access control)
+        async function uploadOfficerDocument() {
+            if (!currentOfficer) {
+                alert('You must be logged in to upload documents.');
+                return;
+            }
+            
+            if (!accessControlSettings.allowUpload) {
+                alert('Document upload is currently disabled by admin.');
+                return;
+            }
+            
+            const fileInput = document.getElementById('officerDocument');
+            const documentTitle = document.getElementById('documentTitle').value;
+            const documentType = document.getElementById('documentType').value;
+            
+            if (!fileInput.files[0]) {
+                alert('Please select a file to upload.');
+                return;
+            }
+            
+            if (!documentTitle) {
+                alert('Please enter a document title.');
+                return;
+            }
+            
+            if (!documentType) {
+                alert('Please select a document type.');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            
+            // Validate file size (based on access control settings)
+            const maxSize = accessControlSettings.maxFileSize * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert(`File size too large. Maximum size is ${accessControlSettings.maxFileSize}MB.`);
+                return;
+            }
+            
+            // Validate file type
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Invalid file type. Please upload PDF, Word, or Image files only.');
+                return;
+            }
+            
+            try {
+                // Show progress
+                const progressContainer = document.getElementById('officerProgressContainer');
+                const progressFill = document.getElementById('officerProgressFill');
+                const progressText = document.getElementById('officerProgressText');
+                
+                progressContainer.style.display = 'block';
+                progressFill.style.width = '0%';
+                progressText.textContent = 'Starting upload...';
+                
+                // Generate unique ID for document
+                const docId = 'doc_' + Date.now();
+                const fileName = `officer_documents/${currentOfficer.serviceNumber}/${docId}_${file.name.replace(/\s+/g, '_')}`;
+                
+                // Create storage reference
+                const storageRef = firebase.storage().ref();
+                const fileRef = storageRef.child(fileName);
+                
+                // Upload file
+                const uploadTask = fileRef.put(file);
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        const percentage = Math.round(progress);
+                        
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = percentage + '% uploaded';
+                    },
+                    (error) => {
+                        console.error('Upload error:', error);
+                        progressContainer.style.display = 'none';
+                        alert('Upload failed: ' + error.message);
+                    },
+                    async () => {
+                        try {
+                            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                            
+                            // Save document info to database
+                            const documentData = {
+                                id: docId,
+                                title: documentTitle,
+                                type: documentType,
+                                fileName: file.name,
+                                fileSize: file.size,
+                                downloadURL: downloadURL,
+                                uploadDate: new Date().toISOString(),
+                                officerName: currentOfficer.fullName,
+                                serviceNumber: currentOfficer.serviceNumber,
+                                storagePath: fileName
+                            };
+                            
+                            // Save under user_documents
+                            await database.ref(`user_documents/${currentOfficer.serviceNumber}/${docId}`).set(documentData);
+                            
+                            // Also save reference under user's own data
+                            await database.ref(`users/${currentOfficer.serviceNumber}/documents/${docId}`).set({
+                                id: docId,
+                                title: documentTitle,
+                                type: documentType,
+                                uploadDate: new Date().toISOString()
+                            });
+                            
+                            alert('Document uploaded successfully!');
+                            
+                            // Reset form
+                            fileInput.value = '';
+                            document.getElementById('documentTitle').value = '';
+                            document.getElementById('documentType').value = '';
+                            document.getElementById('officerFileName').textContent = 'No file chosen';
+                            progressContainer.style.display = 'none';
+                            
+                            // Reload documents
+                            loadOfficerDocuments();
+                            
+                        } catch (error) {
+                            console.error('Error saving document info:', error);
+                            alert('Error saving document information.');
+                        }
+                    }
+                );
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Error uploading document: ' + error.message);
+            }
+        }
+
+        // Load officer documents
+        async function loadOfficerDocuments() {
+            if (!currentOfficer) return;
+            
+            try {
+                const snapshot = await database.ref(`user_documents/${currentOfficer.serviceNumber}`).once('value');
+                const container = document.getElementById('myDocumentsGrid');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const doc = childSnapshot.val();
+                        const docElement = document.createElement('div');
+                        docElement.className = 'document-card';
+                        
+                        // Get file extension for icon
+                        const fileExt = doc.fileName ? doc.fileName.split('.').pop().toLowerCase() : '';
+                        let fileIcon = 'fa-file';
+                        
+                        if (fileExt === 'pdf') fileIcon = 'fa-file-pdf';
+                        else if (['doc', 'docx'].includes(fileExt)) fileIcon = 'fa-file-word';
+                        else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) fileIcon = 'fa-file-image';
+                        
+                        docElement.innerHTML = `
+                            <h4><i class="fas ${fileIcon}"></i> ${doc.title || 'Untitled Document'}</h4>
+                            <div class="document-meta">
+                                <span>${doc.type || 'Document'}</span>
+                                <span>${doc.uploadDate ? new Date(doc.uploadDate).toLocaleDateString() : 'N/A'}</span>
+                            </div>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 10px;">
+                                ${(doc.fileSize / 1024).toFixed(2)} KB • ${doc.fileName || ''}
+                            </p>
+                            <div class="document-actions">
+                                <button class="btn-small btn-primary" onclick="previewDocument('${doc.downloadURL}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                ${accessControlSettings.allowDocumentDownload ? 
+                                    `<button class="btn-small btn-secondary" onclick="downloadDocument('${doc.downloadURL}', '${doc.title || 'document'}')">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>` : ''}
+                            </div>
+                        `;
+                        
+                        container.appendChild(docElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No documents uploaded yet. Upload your first document!</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading officer documents:', error);
+            }
+        }
+
+        // Access Control Functions
+        async function loadAccessControlSettings() {
+            try {
+                const snapshot = await database.ref('access_control').once('value');
+                if (snapshot.exists()) {
+                    accessControlSettings = snapshot.val();
+                    
+                    // Update UI checkboxes
+                    document.getElementById('allowUpload').checked = accessControlSettings.allowUpload;
+                    document.getElementById('allowMeetingPreview').checked = accessControlSettings.allowMeetingPreview;
+                    document.getElementById('allowDocumentDownload').checked = accessControlSettings.allowDocumentDownload;
+                    document.getElementById('allowCertificateView').checked = accessControlSettings.allowCertificateView;
+                    document.getElementById('allowCertificateDownload').checked = accessControlSettings.allowCertificateDownload;
+                    document.getElementById('allowProfileEdit').checked = accessControlSettings.allowProfileEdit;
+                    document.getElementById('allowViewOfficers').checked = accessControlSettings.allowViewOfficers;
+                    document.getElementById('maxFileSize').value = accessControlSettings.maxFileSize || 10;
+                } else {
+                    // Set default settings
+                    await database.ref('access_control').set(accessControlSettings);
+                }
+            } catch (error) {
+                console.error('Error loading access control settings:', error);
+            }
+        }
+
+        function updateAccessControl(setting, value) {
+            accessControlSettings[setting] = value;
+        }
+
+        async function saveAccessSettings() {
+            try {
+                await database.ref('access_control').set(accessControlSettings);
+                alert('Access control settings saved successfully!');
+            } catch (error) {
+                alert('Error saving settings: ' + error.message);
+            }
+        }
+
+        // Custom Forms Functions
+        function showAddFormField() {
+            document.getElementById('addFormFieldModal').style.display = 'flex';
+            document.getElementById('fieldOptionsContainer').style.display = 'none';
+            const form = document.getElementById('addFormFieldForm');
+            if (form) form.reset();
+        }
+
+        function closeAddFormField() {
+            document.getElementById('addFormFieldModal').style.display = 'none';
+        }
+
+        function toggleFieldOptions() {
+            const fieldType = document.getElementById('fieldType').value;
+            const optionsContainer = document.getElementById('fieldOptionsContainer');
+            
+            if (fieldType === 'select' || fieldType === 'radio') {
+                optionsContainer.style.display = 'block';
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        function handleAddFormField(e) {
+            e.preventDefault();
+            
+            const fieldType = document.getElementById('fieldType').value;
+            const fieldLabel = document.getElementById('fieldLabel').value;
+            const fieldName = document.getElementById('fieldName').value;
+            const fieldOptions = document.getElementById('fieldOptions').value;
+            const fieldRequired = document.getElementById('fieldRequired').value === 'true';
+            const fieldHelp = document.getElementById('fieldHelp').value;
+            
+            if (!fieldType || !fieldLabel || !fieldName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const field = {
+                id: 'field_' + Date.now(),
+                type: fieldType,
+                label: fieldLabel,
+                name: fieldName,
+                options: fieldOptions ? fieldOptions.split(',').map(opt => opt.trim()) : [],
+                required: fieldRequired,
+                help: fieldHelp,
+                order: customFormFields.length
+            };
+            
+            customFormFields.push(field);
+            renderFormField(field);
+            closeAddFormField();
+            
+            // Show preview
+            updateFormPreview();
+        }
+
+        function renderFormField(field) {
+            const formBuilder = document.getElementById('formBuilder');
+            if (!formBuilder) return;
+            
+            const fieldElement = document.createElement('div');
+            fieldElement.className = 'form-field';
+            fieldElement.id = 'field_' + field.id;
+            
+            fieldElement.innerHTML = `
+                <div class="form-field-header">
+                    <div class="form-field-title">${field.label} (${field.type})</div>
+                    <div class="form-field-controls">
+                        <button class="field-control-btn" onclick="moveFieldUp('${field.id}')">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <button class="field-control-btn" onclick="moveFieldDown('${field.id}')">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button class="field-control-btn" onclick="editField('${field.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="field-control-btn" onclick="removeField('${field.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="font-size: 0.8rem; color: #8bb9ff;">
+                    <div>Name: ${field.name}</div>
+                    <div>Required: ${field.required ? 'Yes' : 'No'}</div>
+                    ${field.help ? `<div>Help: ${field.help}</div>` : ''}
+                    ${field.options.length > 0 ? `<div>Options: ${field.options.join(', ')}</div>` : ''}
+                </div>
+            `;
+            
+            formBuilder.appendChild(fieldElement);
+        }
+
+        function moveFieldUp(fieldId) {
+            const index = customFormFields.findIndex(f => f.id === fieldId);
+            if (index > 0) {
+                // Swap with previous
+                [customFormFields[index], customFormFields[index - 1]] = [customFormFields[index - 1], customFormFields[index]];
+                updateFormBuilder();
+                updateFormPreview();
+            }
+        }
+
+        function moveFieldDown(fieldId) {
+            const index = customFormFields.findIndex(f => f.id === fieldId);
+            if (index < customFormFields.length - 1) {
+                // Swap with next
+                [customFormFields[index], customFormFields[index + 1]] = [customFormFields[index + 1], customFormFields[index]];
+                updateFormBuilder();
+                updateFormPreview();
+            }
+        }
+
+        function editField(fieldId) {
+            const field = customFormFields.find(f => f.id === fieldId);
+            if (!field) return;
+            
+            // Remove the field
+            removeField(fieldId);
+            
+            // Populate the form with field data
+            document.getElementById('fieldType').value = field.type;
+            document.getElementById('fieldLabel').value = field.label;
+            document.getElementById('fieldName').value = field.name;
+            document.getElementById('fieldOptions').value = field.options.join(', ');
+            document.getElementById('fieldRequired').value = field.required ? 'true' : 'false';
+            document.getElementById('fieldHelp').value = field.help || '';
+            
+            toggleFieldOptions();
+            showAddFormField();
+        }
+
+        function removeField(fieldId) {
+            customFormFields = customFormFields.filter(f => f.id !== fieldId);
+            updateFormBuilder();
+            updateFormPreview();
+        }
+
+        function updateFormBuilder() {
+            const formBuilder = document.getElementById('formBuilder');
+            if (!formBuilder) return;
+            
+            formBuilder.innerHTML = '';
+            customFormFields.forEach(field => {
+                renderFormField(field);
+            });
+        }
+
+        function updateFormPreview() {
+            const previewContent = document.getElementById('previewContent');
+            const formPreview = document.getElementById('formPreview');
+            
+            if (!previewContent || !formPreview) return;
+            
+            if (customFormFields.length === 0) {
+                formPreview.style.display = 'none';
+                return;
+            }
+            
+            formPreview.style.display = 'block';
+            previewContent.innerHTML = '<h4 style="color: #1e90ff; margin-bottom: 15px;">Form Preview</h4>';
+            
+            customFormFields.forEach(field => {
+                let fieldHtml = '';
+                
+                switch(field.type) {
+                    case 'text':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <input type="text" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'textarea':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <textarea class="form-input" name="${field.name}" rows="3" ${field.required ? 'required' : ''}></textarea>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'number':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <input type="number" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'date':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <input type="date" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'select':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <select class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                    <option value="">Select</option>
+                                    ${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                </select>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'checkbox':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="${field.name}" ${field.required ? 'required' : ''}>
+                                    <span>${field.label}${field.required ? ' *' : ''}</span>
+                                </label>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'radio':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                ${field.options.map(opt => `
+                                    <div style="margin-bottom: 5px;">
+                                        <label style="display: flex; align-items: center; gap: 8px;">
+                                            <input type="radio" name="${field.name}" value="${opt}" ${field.required ? 'required' : ''}>
+                                            <span>${opt}</span>
+                                        </label>
+                                    </div>
+                                `).join('')}
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                    case 'file':
+                        fieldHtml = `
+                            <div class="form-group">
+                                <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                <input type="file" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                            </div>
+                        `;
+                        break;
+                }
+                
+                previewContent.innerHTML += fieldHtml;
+            });
+            
+            previewContent.innerHTML += `
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="submitCustomForm()">
+                        <i class="fas fa-paper-plane"></i> Submit Form
+                    </button>
+                </div>
+            `;
+        }
+
+        async function saveCustomForm() {
+            try {
+                await database.ref('custom_forms/main_form').set({
+                    fields: customFormFields,
+                    updatedAt: new Date().toISOString(),
+                    updatedBy: 'Admin'
+                });
+                alert('Custom form saved successfully!');
+            } catch (error) {
+                alert('Error saving form: ' + error.message);
+            }
+        }
+
+        async function loadCustomForms() {
+            try {
+                const snapshot = await database.ref('custom_forms/main_form').once('value');
+                if (snapshot.exists()) {
+                    const formData = snapshot.val();
+                    customFormFields = formData.fields || [];
+                    updateFormBuilder();
+                    updateFormPreview();
+                }
+            } catch (error) {
+                console.error('Error loading custom forms:', error);
+            }
+        }
+
+        async function loadCustomFormsForOfficer() {
+            try {
+                const snapshot = await database.ref('custom_forms/main_form').once('value');
+                const container = document.getElementById('officerFormsContainer');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    const formData = snapshot.val();
+                    const fields = formData.fields || [];
+                    
+                    if (fields.length === 0) return;
+                    
+                    container.innerHTML = `
+                        <div class="card">
+                            <div class="card-content">
+                                <h4 style="color: #1e90ff; margin-bottom: 15px;">Fill Custom Form</h4>
+                                <form id="customFormForOfficer">
+                                    ${fields.map(field => {
+                                        let fieldHtml = '';
+                                        switch(field.type) {
+                                            case 'text':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <input type="text" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'textarea':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <textarea class="form-input" name="${field.name}" rows="3" ${field.required ? 'required' : ''}></textarea>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'number':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <input type="number" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'date':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <input type="date" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'select':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <select class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                            <option value="">Select</option>
+                                                            ${field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                                                        </select>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'checkbox':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label style="display: flex; align-items: center; gap: 8px;">
+                                                            <input type="checkbox" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                            <span>${field.label}${field.required ? ' *' : ''}</span>
+                                                        </label>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'radio':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        ${field.options.map(opt => `
+                                                            <div style="margin-bottom: 5px;">
+                                                                <label style="display: flex; align-items: center; gap: 8px;">
+                                                                    <input type="radio" name="${field.name}" value="${opt}" ${field.required ? 'required' : ''}>
+                                                                    <span>${opt}</span>
+                                                                </label>
+                                                            </div>
+                                                        `).join('')}
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                            case 'file':
+                                                fieldHtml = `
+                                                    <div class="form-group">
+                                                        <label class="form-label">${field.label}${field.required ? ' *' : ''}</label>
+                                                        <input type="file" class="form-input" name="${field.name}" ${field.required ? 'required' : ''}>
+                                                        ${field.help ? `<small style="color: #6b8db3;">${field.help}</small>` : ''}
+                                                    </div>
+                                                `;
+                                                break;
+                                        }
+                                        return fieldHtml;
+                                    }).join('')}
+                                    <div style="margin-top: 20px;">
+                                        <button type="button" class="btn btn-primary" onclick="submitOfficerForm()">
+                                            <i class="fas fa-paper-plane"></i> Submit Form
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading custom forms for officer:', error);
+            }
+        }
+
+        async function submitOfficerForm() {
+            if (!currentOfficer) return;
+            
+            const form = document.getElementById('customFormForOfficer');
+            if (!form) return;
+            
+            const formData = {};
+            let isValid = true;
+            
+            // Collect form data
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    formData[input.name] = input.checked;
+                } else if (input.type === 'radio') {
+                    if (input.checked) {
+                        formData[input.name] = input.value;
+                    }
+                } else if (input.type === 'file') {
+                    if (input.files[0]) {
+                        formData[input.name] = input.files[0].name;
+                    }
+                } else {
+                    formData[input.name] = input.value;
+                }
+                
+                // Check required fields
+                if (input.required && !input.value && input.type !== 'checkbox' && input.type !== 'file') {
+                    isValid = false;
+                    input.style.borderColor = '#e74c3c';
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            if (!isValid) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            try {
+                const submissionId = 'submission_' + Date.now();
+                const submissionData = {
+                    id: submissionId,
+                    officerName: currentOfficer.fullName,
+                    serviceNumber: currentOfficer.serviceNumber,
+                    formData: formData,
+                    submittedAt: new Date().toISOString()
+                };
+                
+                await database.ref(`form_submissions/${submissionId}`).set(submissionData);
+                alert('Form submitted successfully!');
+                form.reset();
+            } catch (error) {
+                alert('Error submitting form: ' + error.message);
+            }
+        }
+
+        // Announcements Functions
+        async function postAnnouncement() {
+            const title = document.getElementById('announcementTitle').value;
+            const content = document.getElementById('announcementContent').value;
+            const priority = document.getElementById('announcementPriority').value;
+            
+            if (!title || !content) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            try {
+                const announcementId = 'announcement_' + Date.now();
+                const announcementData = {
+                    id: announcementId,
+                    title: title,
+                    content: content,
+                    priority: priority,
+                    postedBy: 'Admin',
+                    postedAt: new Date().toISOString(),
+                    isActive: true
+                };
+                
+                await database.ref(`announcements/${announcementId}`).set(announcementData);
+                alert('Announcement posted successfully!');
+                
+                // Clear form
+                document.getElementById('announcementTitle').value = '';
+                document.getElementById('announcementContent').value = '';
+                document.getElementById('announcementPriority').value = 'normal';
+                
+                // Reload announcements
+                loadAnnouncements();
+                
+            } catch (error) {
+                alert('Error posting announcement: ' + error.message);
+            }
+        }
+
+        async function loadAnnouncements() {
+            try {
+                const snapshot = await database.ref('announcements').orderByChild('postedAt').once('value');
+                const container = document.getElementById('announcementsList');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                announcements = [];
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const announcement = childSnapshot.val();
+                        if (!announcement.isActive) return;
+                        
+                        announcements.push(announcement);
+                        
+                        const priorityColor = announcement.priority === 'urgent' ? '#e74c3c' : 
+                                            announcement.priority === 'important' ? '#f39c12' : '#3498db';
+                        
+                        const announcementElement = document.createElement('div');
+                        announcementElement.className = 'document-item';
+                        announcementElement.style.borderLeftColor = priorityColor;
+                        
+                        announcementElement.innerHTML = `
+                            <div class="document-info">
+                                <h4>${announcement.title}</h4>
+                                <p>${announcement.content}</p>
+                                <small style="color: #6b8db3;">
+                                    Posted by ${announcement.postedBy} on ${new Date(announcement.postedAt).toLocaleDateString()}
+                                    <span style="color: ${priorityColor}; font-weight: bold; margin-left: 10px;">
+                                        ${announcement.priority.toUpperCase()}
+                                    </span>
+                                </small>
+                            </div>
+                            <button class="preview-btn" onclick="removeAnnouncement('${announcement.id}')">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        `;
+                        
+                        container.appendChild(announcementElement);
+                    });
+                } else {
+                    container.innerHTML = '<div class="card"><div class="card-content">No announcements posted yet.</div></div>';
+                }
+            } catch (error) {
+                console.error('Error loading announcements:', error);
+            }
+        }
+
+        async function loadAnnouncementsForOfficer() {
+            try {
+                const snapshot = await database.ref('announcements').orderByChild('postedAt').once('value');
+                const container = document.getElementById('announcementsDisplay');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    const announcementsArray = [];
+                    snapshot.forEach((childSnapshot) => {
+                        const announcement = childSnapshot.val();
+                        if (announcement.isActive) {
+                            announcementsArray.push(announcement);
+                        }
+                    });
+                    
+                    // Show only latest 3 announcements
+                    const latestAnnouncements = announcementsArray.slice(-3).reverse();
+                    
+                    if (latestAnnouncements.length === 0) {
+                        container.innerHTML = '<p style="color: #6b8db3; text-align: center;">No announcements at the moment.</p>';
+                        return;
+                    }
+                    
+                    latestAnnouncements.forEach(announcement => {
+                        const priorityColor = announcement.priority === 'urgent' ? '#e74c3c' : 
+                                            announcement.priority === 'important' ? '#f39c12' : '#3498db';
+                        
+                        const announcementElement = document.createElement('div');
+                        announcementElement.className = 'document-card';
+                        announcementElement.style.marginBottom = '10px';
+                        announcementElement.style.borderLeft = `4px solid ${priorityColor}`;
+                        
+                        announcementElement.innerHTML = `
+                            <h4>${announcement.title}</h4>
+                            <p style="color: #8bb9ff; font-size: 0.85rem; margin-bottom: 8px;">${announcement.content}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <small style="color: #6b8db3;">
+                                    ${new Date(announcement.postedAt).toLocaleDateString()}
+                                </small>
+                                <span style="color: ${priorityColor}; font-size: 0.75rem; font-weight: bold;">
+                                    ${announcement.priority.toUpperCase()}
+                                </span>
+                            </div>
+                        `;
+                        
+                        container.appendChild(announcementElement);
+                    });
+                } else {
+                    container.innerHTML = '<p style="color: #6b8db3; text-align: center;">No announcements at the moment.</p>';
+                }
+            } catch (error) {
+                console.error('Error loading announcements for officer:', error);
+            }
+        }
+
+        async function removeAnnouncement(announcementId) {
+            if (!confirm('Are you sure you want to remove this announcement?')) {
+                return;
+            }
+            
+            try {
+                await database.ref(`announcements/${announcementId}`).update({
+                    isActive: false
+                });
+                alert('Announcement removed successfully!');
+                loadAnnouncements();
+            } catch (error) {
+                alert('Error removing announcement: ' + error.message);
+            }
+        }
+
+        // Logout functions
+        function logoutAdmin() {
+            localStorage.removeItem('isAdmin');
+            location.reload();
+        }
+
+        function logoutOfficer() {
+            currentOfficer = null;
+            location.reload();
+        }
+
+        // Close sidebar overlay
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+        }
+    </script>
+    <script>
+        // Show section function for officer
+function showOfficerSection(sectionId) {
+    // Hide all sections
+    const sections = document.querySelectorAll('#officerDashboard .dashboard-section');
+    sections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionId + 'Section');
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+    
+    // Update active menu item
+    const menuItems = document.querySelectorAll('#officerDashboard .menu-item');
+    menuItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+    
+    // Close sidebar on mobile
+    if (window.innerWidth <= 768) {
+        toggleOfficerSidebar();
+    }
+}
+    </script>
+</body>
+</html>
